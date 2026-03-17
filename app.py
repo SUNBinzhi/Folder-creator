@@ -24,7 +24,7 @@ import tkinter as tk
 
 # ==================== Configuration ====================
 APP_TITLE = "Project Scaffold Builder"
-APP_VERSION = "2.0"
+APP_VERSION = "2.1"
 
 # Modern color palette
 class Colors:
@@ -58,26 +58,436 @@ class Colors:
     BORDER_LIGHT = "#cbd5e1"  # Slate 300
 
 
-# Default templates
-DEFAULT_STRUCTURE = """# One item per line. Indentation defines nesting.
-# Folder names may optionally end with '/'.
-# Files are lines without a trailing '/'.
+# ==================== Project Templates ====================
+PROJECT_TEMPLATES = {
+    "🔬 Research / Data Science": {
+        "description": "For scientific research, data analysis, and experiments",
+        "structure": """# Research / Data Science Project
 README.md
 .gitignore
 requirements.txt
 src/
   main.py
   utils/
+  analysis/
 data/
   raw/
   processed/
+  external/
 results/
   figures/
   tables/
+  models/
+notebooks/
 docs/
 tests/
 notes.md
-"""
+""",
+        "default_name": "research_project"
+    },
+    
+    "🤖 Machine Learning": {
+        "description": "For ML/AI projects with model training pipelines",
+        "structure": """# Machine Learning Project
+README.md
+.gitignore
+requirements.txt
+pyproject.toml
+src/
+  __init__.py
+  data/
+    __init__.py
+    dataset.py
+    preprocessing.py
+  models/
+    __init__.py
+    model.py
+    layers.py
+  training/
+    __init__.py
+    trainer.py
+    callbacks.py
+  evaluation/
+    __init__.py
+    metrics.py
+  utils/
+    __init__.py
+    config.py
+    logger.py
+data/
+  raw/
+  processed/
+  external/
+models/
+  checkpoints/
+  exported/
+experiments/
+  configs/
+  logs/
+notebooks/
+  exploration/
+  experiments/
+tests/
+  test_models.py
+  test_data.py
+scripts/
+  train.py
+  evaluate.py
+  inference.py
+docs/
+configs/
+  config.yaml
+""",
+        "default_name": "ml_project"
+    },
+    
+    "🌐 Web Application": {
+        "description": "For full-stack web applications",
+        "structure": """# Web Application
+README.md
+.gitignore
+.env.example
+package.json
+docker-compose.yml
+frontend/
+  src/
+    components/
+    pages/
+    hooks/
+    utils/
+    styles/
+    assets/
+  public/
+  package.json
+  tsconfig.json
+backend/
+  src/
+    routes/
+    controllers/
+    models/
+    middleware/
+    services/
+    utils/
+  tests/
+  package.json
+shared/
+  types/
+  constants/
+database/
+  migrations/
+  seeds/
+docs/
+  api/
+scripts/
+nginx/
+""",
+        "default_name": "web_app"
+    },
+    
+    "📱 Mobile App": {
+        "description": "For React Native or Flutter mobile applications",
+        "structure": """# Mobile Application
+README.md
+.gitignore
+.env.example
+app.json
+package.json
+src/
+  screens/
+    Home/
+    Profile/
+    Settings/
+  components/
+    common/
+    forms/
+    navigation/
+  hooks/
+  services/
+    api/
+    storage/
+  utils/
+  constants/
+  types/
+  assets/
+    images/
+    fonts/
+    icons/
+  navigation/
+  store/
+    slices/
+tests/
+  __mocks__/
+  screens/
+  components/
+ios/
+android/
+docs/
+scripts/
+""",
+        "default_name": "mobile_app"
+    },
+    
+    "📦 Python Package": {
+        "description": "For distributable Python libraries/packages",
+        "structure": """# Python Package
+README.md
+LICENSE
+.gitignore
+pyproject.toml
+setup.py
+MANIFEST.in
+CHANGELOG.md
+src/
+  package_name/
+    __init__.py
+    core.py
+    utils.py
+    exceptions.py
+    types.py
+    cli.py
+tests/
+  __init__.py
+  conftest.py
+  test_core.py
+  test_utils.py
+docs/
+  index.md
+  api/
+  guides/
+  conf.py
+  Makefile
+examples/
+  basic_usage.py
+  advanced_usage.py
+.github/
+  workflows/
+    ci.yml
+    publish.yml
+""",
+        "default_name": "my_package"
+    },
+    
+    "⚡ API Service": {
+        "description": "For REST/GraphQL API backends",
+        "structure": """# API Service
+README.md
+.gitignore
+.env.example
+requirements.txt
+pyproject.toml
+Dockerfile
+docker-compose.yml
+src/
+  __init__.py
+  main.py
+  config.py
+  api/
+    __init__.py
+    routes/
+      __init__.py
+      health.py
+      users.py
+    dependencies.py
+  core/
+    __init__.py
+    security.py
+    exceptions.py
+  models/
+    __init__.py
+    user.py
+    base.py
+  schemas/
+    __init__.py
+    user.py
+  services/
+    __init__.py
+    user_service.py
+  db/
+    __init__.py
+    session.py
+    migrations/
+tests/
+  __init__.py
+  conftest.py
+  api/
+  services/
+scripts/
+  start.sh
+  migrate.sh
+docs/
+  api/
+alembic/
+  versions/
+  env.py
+""",
+        "default_name": "api_service"
+    },
+    
+    "🔧 CLI Tool": {
+        "description": "For command-line interface tools",
+        "structure": """# CLI Tool
+README.md
+LICENSE
+.gitignore
+pyproject.toml
+setup.py
+src/
+  cli_name/
+    __init__.py
+    __main__.py
+    cli.py
+    commands/
+      __init__.py
+      init.py
+      run.py
+      config.py
+    core/
+      __init__.py
+      engine.py
+    utils/
+      __init__.py
+      console.py
+      config.py
+    templates/
+tests/
+  __init__.py
+  conftest.py
+  test_cli.py
+  test_commands/
+docs/
+  index.md
+  commands/
+  configuration.md
+examples/
+.github/
+  workflows/
+    ci.yml
+""",
+        "default_name": "my_cli"
+    },
+    
+    "🎮 Game Project": {
+        "description": "For game development projects",
+        "structure": """# Game Project
+README.md
+.gitignore
+requirements.txt
+main.py
+src/
+  __init__.py
+  game/
+    __init__.py
+    engine.py
+    scenes/
+      __init__.py
+      menu.py
+      gameplay.py
+    entities/
+      __init__.py
+      player.py
+      enemies.py
+    systems/
+      __init__.py
+      physics.py
+      audio.py
+      input.py
+    ui/
+      __init__.py
+      hud.py
+      menu.py
+  utils/
+    __init__.py
+    math.py
+    helpers.py
+assets/
+  sprites/
+    characters/
+    environment/
+    ui/
+  audio/
+    music/
+    sfx/
+  fonts/
+  maps/
+    levels/
+data/
+  configs/
+  saves/
+tests/
+docs/
+  design/
+  art/
+""",
+        "default_name": "my_game"
+    },
+    
+    "📊 Dashboard / Analytics": {
+        "description": "For data dashboards and analytics platforms",
+        "structure": """# Dashboard / Analytics
+README.md
+.gitignore
+.env.example
+requirements.txt
+pyproject.toml
+docker-compose.yml
+app/
+  __init__.py
+  main.py
+  config.py
+  pages/
+    __init__.py
+    home.py
+    analytics.py
+    reports.py
+  components/
+    __init__.py
+    charts.py
+    tables.py
+    filters.py
+  data/
+    __init__.py
+    connectors/
+    processors/
+    cache/
+  utils/
+    __init__.py
+assets/
+  css/
+  images/
+data/
+  raw/
+  processed/
+  exports/
+notebooks/
+  analysis/
+  reports/
+tests/
+scripts/
+  etl/
+  reports/
+docs/
+configs/
+""",
+        "default_name": "analytics_dashboard"
+    },
+    
+    "📝 Custom (Empty)": {
+        "description": "Start with a blank template",
+        "structure": """# Custom Project Structure
+# Add your folders and files below
+# Use 2-space indentation for nesting
+README.md
+.gitignore
+src/
+docs/
+""",
+        "default_name": "my_project"
+    }
+}
+
+# Default template (first one)
+DEFAULT_TEMPLATE_NAME = "🔬 Research / Data Science"
+DEFAULT_STRUCTURE = PROJECT_TEMPLATES[DEFAULT_TEMPLATE_NAME]["structure"]
 
 DEFAULT_GITIGNORE = """__pycache__/
 *.pyc
@@ -212,6 +622,7 @@ class ScaffoldApp:
         # Variables
         self.base_dir_var = ctk.StringVar(value=str(Path.home() / "Research_Code" / "02_learning_and_demos"))
         self.project_name_var = ctk.StringVar(value="ai_code_practice")
+        self.template_type_var = ctk.StringVar(value=DEFAULT_TEMPLATE_NAME)
         self.init_git_var = ctk.BooleanVar(value=False)
         self.create_readme_var = ctk.BooleanVar(value=True)
         self.create_gitignore_var = ctk.BooleanVar(value=True)
@@ -219,7 +630,7 @@ class ScaffoldApp:
         self.open_after_create_var = ctk.BooleanVar(value=True)
         
         self._build_ui()
-        self.structure_text.insert("1.0", DEFAULT_STRUCTURE)
+        self._on_template_change(DEFAULT_TEMPLATE_NAME)
         self.update_preview()
     
     def _build_ui(self):
@@ -268,6 +679,9 @@ class ScaffoldApp:
             scrollbar_button_hover_color=Colors.PRIMARY_LIGHT
         )
         settings_frame.pack(fill="both", expand=True, padx=20, pady=10)
+        
+        # Project Type selector
+        self._create_template_selector(settings_frame)
         
         # Base location
         self._create_input_group(
@@ -555,6 +969,79 @@ class ScaffoldApp:
         ModernTooltip(cb, tooltip)
         return cb
     
+    def _create_template_selector(self, parent):
+        """Create the project type template selector."""
+        frame = ctk.CTkFrame(parent, fg_color="transparent")
+        frame.pack(fill="x", pady=(0, 20))
+        
+        # Label
+        ctk.CTkLabel(
+            frame,
+            text="🎯 Project Type",
+            font=self.font_section,
+            text_color=Colors.TEXT_DARK
+        ).pack(anchor="w", pady=(0, 8))
+        
+        # Template dropdown
+        template_names = list(PROJECT_TEMPLATES.keys())
+        self.template_dropdown = ctk.CTkComboBox(
+            frame,
+            values=template_names,
+            variable=self.template_type_var,
+            height=40,
+            corner_radius=8,
+            border_width=1,
+            border_color=Colors.BORDER_DARK,
+            fg_color=Colors.BG_DARK,
+            button_color=Colors.PRIMARY,
+            button_hover_color=Colors.PRIMARY_HOVER,
+            dropdown_fg_color=Colors.BG_DARK_SECONDARY,
+            dropdown_hover_color=Colors.PRIMARY,
+            dropdown_text_color=Colors.TEXT_DARK,
+            text_color=Colors.TEXT_DARK,
+            font=self.font_normal,
+            dropdown_font=self.font_normal,
+            command=self._on_template_change,
+            state="readonly"
+        )
+        self.template_dropdown.pack(fill="x")
+        
+        # Description label
+        self.template_desc_label = ctk.CTkLabel(
+            frame,
+            text=PROJECT_TEMPLATES[DEFAULT_TEMPLATE_NAME]["description"],
+            font=self.font_small,
+            text_color=Colors.TEXT_MUTED,
+            wraplength=260,
+            justify="left"
+        )
+        self.template_desc_label.pack(anchor="w", pady=(8, 0))
+    
+    def _on_template_change(self, template_name: str):
+        """Handle template type change."""
+        if template_name not in PROJECT_TEMPLATES:
+            return
+        
+        template = PROJECT_TEMPLATES[template_name]
+        
+        # Update description
+        if hasattr(self, 'template_desc_label'):
+            self.template_desc_label.configure(text=template["description"])
+        
+        # Update project name if using default
+        if hasattr(self, 'project_name_var'):
+            current_name = self.project_name_var.get()
+            # Only update if current name is a default name from another template
+            default_names = [t["default_name"] for t in PROJECT_TEMPLATES.values()]
+            if current_name in default_names or current_name == "ai_code_practice":
+                self.project_name_var.set(template["default_name"])
+        
+        # Update structure text
+        if hasattr(self, 'structure_text'):
+            self.structure_text.delete("1.0", "end")
+            self.structure_text.insert("1.0", template["structure"])
+            self.update_preview()
+    
     def _toggle_theme(self):
         """Toggle between dark and light mode."""
         if ctk.get_appearance_mode() == "Dark":
@@ -572,15 +1059,15 @@ class ScaffoldApp:
 
     def reset_defaults(self):
         """Reset all settings to default values."""
-        self.project_name_var.set("ai_code_practice")
+        self.template_type_var.set(DEFAULT_TEMPLATE_NAME)
+        self.project_name_var.set(PROJECT_TEMPLATES[DEFAULT_TEMPLATE_NAME]["default_name"])
         self.base_dir_var.set(str(Path.home() / "Research_Code" / "02_learning_and_demos"))
         self.init_git_var.set(False)
         self.create_readme_var.set(True)
         self.create_gitignore_var.set(True)
         self.create_requirements_var.set(False)
         self.open_after_create_var.set(True)
-        self.structure_text.delete("1.0", "end")
-        self.structure_text.insert("1.0", DEFAULT_STRUCTURE)
+        self._on_template_change(DEFAULT_TEMPLATE_NAME)
         self.update_preview()
 
     def parse_structure(self, text: str):
@@ -659,6 +1146,7 @@ class ScaffoldApp:
         if not filepath:
             return
         payload = {
+            "template_type": self.template_type_var.get(),
             "structure": self.structure_text.get("1.0", "end"),
             "options": {
                 "create_readme": self.create_readme_var.get(),
@@ -683,6 +1171,15 @@ class ScaffoldApp:
         try:
             with open(filepath, "r", encoding="utf-8") as f:
                 payload = json.load(f)
+            
+            # Load template type if available
+            template_type = payload.get("template_type", "📝 Custom (Empty)")
+            if template_type in PROJECT_TEMPLATES:
+                self.template_type_var.set(template_type)
+                self.template_desc_label.configure(
+                    text=PROJECT_TEMPLATES[template_type]["description"]
+                )
+            
             structure = payload.get("structure", DEFAULT_STRUCTURE)
             self.structure_text.delete("1.0", "end")
             self.structure_text.insert("1.0", structure)
