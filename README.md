@@ -91,8 +91,14 @@ The app features a clean two-panel layout:
 ### Project Structure
 ```
 Folder creator/
-├── app.py          # Main application
-└── README.md       # This file
+├── app.py                      # Thin entrypoint
+├── README.md
+└── scaffold_builder/
+  ├── config/                # App settings + project templates
+  ├── core/                  # Parser + project builder logic
+  ├── ui/                    # UI app, widgets, dialogs
+  ├── utils/                 # Dependency bootstrap utilities
+  └── main.py                # Application startup
 ```
 
 ### Tech Stack
